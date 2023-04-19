@@ -1,11 +1,13 @@
 type Props = {
   children?: (Node | string)[] | string;
-  class?: string;
+  className?: string;
+  id?: string;
 };
 export function div(props: Props) {
   const res = document.createElement("div");
 
-  if (props.class) res.className = props.class;
+  if (props.className) res.className = props.className;
+  if (props.id) res.id = props.id;
 
   const { children } = props;
   if (children) {

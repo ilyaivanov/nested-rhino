@@ -20,6 +20,8 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   font-size: 15px;
+
+  font-weight: 500;
 }
 
 .row {
@@ -38,5 +40,7 @@ body {
   height: 8px;
   background-color: $secondary-color;
   margin-right: 8px;
+
+  // this depends on text font-size (centering now by eye)
   margin-top: 5px;
 }
