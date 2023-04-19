@@ -1,29 +1,36 @@
+import { div } from "./html";
+import { lorem } from "./utils";
 import "./index.scss";
 
-document.body.style.padding = "20px";
-let post = "Hi!";
-const res = document.createElement("div");
-res.innerText = "Hi";
+const items = [
+  "Carbon Based Lifeforms",
+  "Circular",
+  "I Awake",
+  "James Murray",
+  "Miktek",
+  "Koan",
+  "Zero Cult",
+  lorem,
+  "Androcell",
+  "Scann-Tec",
+  "Hol Baumann",
+  "Asura",
+  "Cell",
+  "Biosphere",
+  "Aes Dana",
+  "Side Liner",
+  "Fahrenheit Project",
+];
 
 function renderApp() {
-  input.value = post;
-  res.innerText = post;
+  return div({
+    children: items.map((itemTitle, index) =>
+      div({
+        class: `row ${index == 5 ? "selected" : ""}`,
+        children: [div({ class: "icon" }), itemTitle],
+      })
+    ),
+  });
 }
 
-res.classList.add("label");
-const input = document.createElement("input");
-
-input.addEventListener("click", () => {
-  post = "";
-  renderApp();
-});
-
-input.addEventListener("input", () => {
-  post = input.value;
-  renderApp();
-});
-
-renderApp();
-
-document.body.append(res);
-document.body.append(input);
+document.body.append(renderApp());
