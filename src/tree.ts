@@ -15,9 +15,20 @@ export function getItemAbove(item: Item) {
   const context = getContext(item);
   return context[context.indexOf(item) - 1];
 }
+
 export function getItemBelow(item: Item) {
   const context = getContext(item);
   return context[context.indexOf(item) + 1];
+}
+export function removeItem(item: Item) {
+  const context = getContext(item);
+  context.splice(context.indexOf(item), 1);
+}
+
+export function insertAfter(item: Item, newItem: Item) {
+  const context = getContext(item);
+  context.splice(context.indexOf(item) + 1, 0, newItem);
+  newItem.parent = item.parent;
 }
 
 function getContext(item: Item) {

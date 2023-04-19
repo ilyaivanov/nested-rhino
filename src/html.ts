@@ -1,19 +1,28 @@
+export function div(props: Props) {
+  return assignCommonProperties(document.createElement("div"), props);
+}
+
+export function span(props: Props) {
+  return assignCommonProperties(document.createElement("span"), props);
+}
+
 type Props = {
   children?: (Node | string)[] | string;
   className?: string;
   id?: string;
 };
-export function div(props: Props) {
-  const res = document.createElement("div");
-
-  if (props.className) res.className = props.className;
-  if (props.id) res.id = props.id;
+function assignCommonProperties<T extends HTMLElement>(
+  elem: T,
+  props: Props
+): T {
+  if (props.className) elem.className = props.className;
+  if (props.id) elem.id = props.id;
 
   const { children } = props;
   if (children) {
-    if (typeof children === "string") res.textContent = children;
-    else for (const child of children) res.append(child);
+    if (typeof children === "string") elem.textContent = children;
+    else for (const child of children) elem.append(child);
   }
 
-  return res;
+  return elem;
 }
