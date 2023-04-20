@@ -6,6 +6,15 @@ export function span(props: Props) {
   return assignCommonProperties(document.createElement("span"), props);
 }
 
+type InputProps = Props & {
+  onInput: (e: Event) => void;
+};
+export function input(props: InputProps) {
+  const res = document.createElement("input");
+  res.addEventListener("input", props.onInput);
+  return assignCommonProperties(res, props);
+}
+
 type Props = {
   children?: (Node | string)[] | string;
   className?: string;

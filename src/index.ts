@@ -9,6 +9,7 @@ import {
   removeItem,
 } from "./tree";
 import "./index.scss";
+import { addItemAfter, itemRemoved } from "./effects";
 
 const root = item("Root", [
   item("Carbon Based Lifeforms"),
@@ -42,7 +43,8 @@ function viewItem(item: Item) {
 
 function renderApp() {
   return div({
-    children: root.children!.map(viewItem),
+    id: root.id,
+    children: root.children.map(viewItem),
   });
 }
 
@@ -50,7 +52,7 @@ document.body.append(renderApp());
 
 window.addEventListener("keydown", (e) => {
   if (!selectedItem) {
-    selectItem(root.children ? root.children[0] : undefined);
+    selectItem(root.children[0]);
     return;
   }
 
@@ -61,8 +63,14 @@ window.addEventListener("keydown", (e) => {
     return;
   }
 
-  if (e.code === "ArrowDown") selectItem(getItemBelow(selectedItem));
-  if (e.code === "ArrowUp") selectItem(getItemAbove(selectedItem));
+  if (e.code === "ArrowDown") {
+    e.preventDefault();
+    selectItem(getItemBelow(selectedItem));
+  }
+  if (e.code === "ArrowUp") {
+    e.preventDefault();
+    selectItem(getItemAbove(selectedItem));
+  }
   if (e.code === "KeyX") removeItemElem(selectedItem);
   if (e.code === "Enter" || e.code === "NumpadEnter") {
     e.preventDefault();
@@ -130,14 +138,13 @@ function selectItem(item: Item | undefined) {
   selectedItem = item;
   document.getElementById(selectedItem.id)?.classList.add("selected");
 }
-selectItem(root.children![0]);
+selectItem(root.children[0]);
 
 //Remove
 function removeItemElem(item: Item) {
   const nextItemToSelect = getItemAbove(item) || getItemBelow(item);
-  const row = document.getElementById(item.id);
-  if (row) row.remove();
   removeItem(item);
+  itemRemoved(item);
 
   selectItem(nextItemToSelect);
 }
@@ -145,11 +152,8 @@ function removeItemElem(item: Item) {
 //Create
 function createNewItemAfter(insertAfterItem: Item) {
   const newItem = item("");
-  const row = document.getElementById(insertAfterItem.id);
-  if (row) {
-    insertAfter(insertAfterItem, newItem);
-    row.insertAdjacentElement("afterend", viewItem(newItem));
-    selectItem(newItem);
-    startEdit(newItem);
-  }
+  insertAfter(insertAfterItem, newItem);
+  addItemAfter(insertAfterItem, viewItem(newItem));
+  selectItem(newItem);
+  startEdit(newItem);
 }

@@ -1,12 +1,19 @@
+import { generateRandomId } from "./utils";
+
 export type Item = {
   text: string;
   id: string;
-  children?: Item[];
+  children: Item[];
   parent?: Item;
 };
 
 export function item(text: string, children?: Item[]): Item {
-  const res = { text, id: Math.random() + "", children };
+  const res: Item = {
+    text,
+    id: generateRandomId(),
+    children: children || [],
+    //
+  };
   if (children) for (const child of children) child.parent = res;
   return res;
 }
