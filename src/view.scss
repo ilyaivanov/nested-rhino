@@ -5,6 +5,8 @@ $selection-backround: #27292a;
 $selection-color: white;
 
 $secondary-color: rgb(125, 125, 125);
+$faded-color: rgb(58, 58, 58);
+$main-content-width: 750px;
 
 body {
   margin: 0;
@@ -29,21 +31,19 @@ body {
   padding-top: 7px;
   padding-bottom: 9px;
   display: flex;
+  padding-right: max((100% - $main-content-width) / 2, 20px);
 }
 
-.row-0 {
-  padding-left: max((100% - 750px) / 2, 20px);
-  padding-right: max((100% - 750px) / 2, 20px);
-}
-
-.row.selected {
+.selected > .row {
   background-color: $selection-backround;
   color: $selection-color;
 }
 
+$icon-size: 8px;
+$half-icon-size: 4px;
 .icon {
-  min-width: 8px;
-  height: 8px;
+  min-width: $icon-size;
+  height: $icon-size;
   background-color: $secondary-color;
   margin-right: 8px;
 
@@ -53,4 +53,40 @@ body {
 
 .row-text {
   outline: none;
+}
+
+.children-container {
+  position: relative;
+}
+
+$line-width: 2px;
+$half-line-width: 1px;
+
+.children-line {
+  width: 2px;
+  background-color: $faded-color;
+
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+}
+
+$step: 30px;
+
+@for $i from 0 through 5 {
+  .row-#{$i} {
+    padding-left: max(
+      (100% - $main-content-width) / 2 + $step * $i,
+      20px + $step * $i
+    );
+  }
+
+  .children-line-#{$i} {
+    left: max(
+      (100% - $main-content-width) /
+        2 +
+        ($step * $i + $half-icon-size - $half-line-width),
+      20px + $step * $i + $half-icon-size - $half-line-width
+    );
+  }
 }

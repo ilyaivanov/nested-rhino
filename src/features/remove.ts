@@ -1,9 +1,9 @@
-import { Item, getContext, getItemAbove, getItemBelow } from "../tree";
+import { Item, getContext } from "../tree";
 import { getRowForItem } from "./item";
-import { selectItem } from "./selection";
+import { getItemToSelectAfterRemovingSelected, selectItem } from "./selection";
 
 export function removeItem(item: Item) {
-  const nextItemToSelect = getItemAbove(item) || getItemBelow(item);
+  const nextItemToSelect = getItemToSelectAfterRemovingSelected();
 
   const context = getContext(item);
   context.splice(context.indexOf(item), 1);

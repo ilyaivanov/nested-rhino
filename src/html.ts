@@ -16,7 +16,7 @@ export function input(props: InputProps) {
 }
 
 type Props = {
-  children?: (Node | string)[] | string;
+  children?: (Node | string | undefined)[] | string;
   style?: {};
   className?: string;
   id?: string;
@@ -31,7 +31,7 @@ function assignCommonProperties<T extends HTMLElement>(
   const { children } = props;
   if (children) {
     if (typeof children === "string") elem.textContent = children;
-    else for (const child of children) elem.append(child);
+    else for (const child of children) child && elem.append(child);
   }
 
   if (props.style) Object.assign(elem.style, props.style);

@@ -5,6 +5,7 @@ import { Item, item } from "../tree";
 // Tests
 
 async function runTests() {
+  document.title = "Nested Rhino (Testing)";
   if (isSlowTesting()) console.info("Running slow tests...");
   else console.info("Running tests...");
   await traversal();

@@ -1,5 +1,5 @@
 import { lorem } from "./utils";
-import { Item, getItemAbove, getItemBelow, item } from "./tree";
+import { Item, item } from "./tree";
 import { moveItemDown, moveItemUp } from "./features/movement";
 import { goDown, goUp, selectItem, selectedItem } from "./features/selection";
 import { addNewItemAfter, createItemAndAddAsFirstChild } from "./features/add";
@@ -13,7 +13,11 @@ const initialState = item("Root", [
     item("1998 - The Path"),
     item("2003 - Hydroponic Garden"),
     item("2006 - World Of Sleepers"),
-    item("2010 - Interloper"),
+    item("2010 - Interloper", [
+      item("Track 1"),
+      item("Track 2"),
+      item("Track 3"),
+    ]),
   ]),
   item("Circular"),
   item("I Awake"),

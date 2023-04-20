@@ -1,4 +1,9 @@
-import { Item, createItemAfter, createItemAsFirstChild } from "../tree";
+import {
+  Item,
+  createItemAfter,
+  createItemAsFirstChild,
+  getItemLevel,
+} from "../tree";
 import { viewItem } from "../view";
 import { startEdit } from "./edit";
 import { getRowForItem } from "./item";
@@ -9,7 +14,7 @@ export function addNewItemAfter(itemAfterToInsert: Item) {
 
   getRowForItem(itemAfterToInsert)?.insertAdjacentElement(
     "afterend",
-    viewItem(newItem)
+    viewItem(newItem, getItemLevel(newItem))
   );
 
   selectItem(newItem);
@@ -20,7 +25,10 @@ export function createItemAndAddAsFirstChild(parent: Item) {
   const newItem = createItemAsFirstChild(parent);
   document
     .getElementById(parent.id)
-    ?.insertAdjacentElement("afterbegin", viewItem(newItem));
+    ?.insertAdjacentElement(
+      "afterbegin",
+      viewItem(newItem, getItemLevel(newItem))
+    );
 
   selectItem(newItem);
   startEdit(newItem);
