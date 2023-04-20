@@ -6,10 +6,17 @@ import {
   getItemBelow,
   insertAfter,
   item,
+  moveItemDown,
+  moveItemUp,
   removeItem,
 } from "./tree";
 import "./index.scss";
-import { addItemAfter, itemRemoved } from "./effects";
+import {
+  addItemAfter,
+  itemRemoved,
+  moveItemDownEffect,
+  moveItemUpEffect,
+} from "./effects";
 
 const root = item("Root", [
   item("Carbon Based Lifeforms"),
@@ -65,11 +72,13 @@ window.addEventListener("keydown", (e) => {
 
   if (e.code === "ArrowDown") {
     e.preventDefault();
-    selectItem(getItemBelow(selectedItem));
+    if (e.metaKey && e.shiftKey) moveItemDownImp(selectedItem);
+    else selectItem(getItemBelow(selectedItem));
   }
   if (e.code === "ArrowUp") {
     e.preventDefault();
-    selectItem(getItemAbove(selectedItem));
+    if (e.metaKey && e.shiftKey) moveItemUpImp(selectedItem);
+    else selectItem(getItemAbove(selectedItem));
   }
   if (e.code === "KeyX") removeItemElem(selectedItem);
   if (e.code === "Enter" || e.code === "NumpadEnter") {
@@ -156,4 +165,13 @@ function createNewItemAfter(insertAfterItem: Item) {
   addItemAfter(insertAfterItem, viewItem(newItem));
   selectItem(newItem);
   startEdit(newItem);
+}
+
+//Movement
+function moveItemDownImp(item: Item) {
+  if (moveItemDown(item)) moveItemDownEffect(item);
+}
+
+function moveItemUpImp(item: Item) {
+  if (moveItemUp(item)) moveItemUpEffect(item);
 }
