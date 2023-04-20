@@ -26,6 +26,13 @@ export function createItemAfter(itemAfterToInsert: Item): Item {
   newItem.parent = itemAfterToInsert.parent;
   return newItem;
 }
+export function createItemAsFirstChild(parent: Item): Item {
+  const newItem = item("");
+
+  parent.children.unshift(newItem);
+  newItem.parent = parent;
+  return newItem;
+}
 
 export function getItemAbove(item: Item) {
   const context = getContext(item);

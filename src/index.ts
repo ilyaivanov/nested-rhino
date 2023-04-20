@@ -1,8 +1,8 @@
 import { lorem } from "./utils";
 import { Item, getItemAbove, getItemBelow, item } from "./tree";
 import { moveItemDown, moveItemUp } from "./features/movement";
-import { selectItem, selectedItem } from "./features/selection";
-import { addNewItemAfter } from "./features/add";
+import { goDown, goUp, selectItem, selectedItem } from "./features/selection";
+import { addNewItemAfter, createItemAndAddAsFirstChild } from "./features/add";
 import { removeItem } from "./features/remove";
 import { elementEdited, startEdit, stopEdit } from "./features/edit";
 import { renderApp } from "./view";
@@ -43,11 +43,6 @@ declare global {
 }
 
 window.addEventListener("keydown", (e) => {
-  if (!selectedItem) {
-    selectItem(root.children[0]);
-    return;
-  }
-
   if (elementEdited) {
     if (e.code === "Enter" || e.code === "NumpadEnter" || e.code === "Escape") {
       stopEdit();
@@ -55,21 +50,27 @@ window.addEventListener("keydown", (e) => {
     return;
   }
 
+  if (e.code === "Enter" || e.code === "NumpadEnter") {
+    e.preventDefault();
+    if (selectedItem) addNewItemAfter(selectedItem);
+    else createItemAndAddAsFirstChild(root);
+  }
+
+  // events below assume existing selected item
+  if (!selectedItem) return;
+
   if (e.code === "ArrowDown") {
     e.preventDefault();
     if (e.metaKey && e.shiftKey) moveItemDown(selectedItem);
-    else selectItem(getItemBelow(selectedItem));
+    else goDown();
   }
   if (e.code === "ArrowUp") {
     e.preventDefault();
     if (e.metaKey && e.shiftKey) moveItemUp(selectedItem);
-    else selectItem(getItemAbove(selectedItem));
+    else goUp();
   }
   if (e.code === "KeyX") removeItem(selectedItem);
-  if (e.code === "Enter" || e.code === "NumpadEnter") {
-    e.preventDefault();
-    addNewItemAfter(selectedItem);
-  }
+
   if (e.code === "KeyE") {
     e.preventDefault();
     startEdit(selectedItem);

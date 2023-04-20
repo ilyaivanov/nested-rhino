@@ -1,4 +1,5 @@
 import { getRowForItem } from "../features/item";
+import { selectedItem } from "../features/selection";
 import { Item, item } from "../tree";
 
 // Tests
@@ -9,6 +10,7 @@ async function runTests() {
   await traversal();
   await movingItems();
   await editTests();
+  await deleteTests();
   console.info("Finished running tests.");
 }
 
@@ -71,7 +73,79 @@ async function movingItems() {
   expectItemIsSelected("Three");
 }
 
-async function editTests() {}
+async function editTests() {
+  expectItemIsSelected("Three");
+
+  await startEdit();
+
+  await inputValue("NewName");
+  await finishEdit();
+  expectItemIsSelected("NewName");
+
+  await createNewItem();
+  expectItemIsSelected("");
+
+  await inputValue("NewName2");
+  await finishEdit();
+  expectItemIsSelected("NewName2");
+
+  expectItems(["NewName", "NewName2", "Two", "One"]);
+}
+
+async function deleteTests() {
+  expectItemIsSelected("NewName2");
+
+  await deleteItem();
+  expectItemIsSelected("NewName");
+
+  await deleteItem();
+  expectItemIsSelected("Two");
+
+  await deleteItem();
+  expectItemIsSelected("One");
+
+  await deleteItem();
+
+  isUndefined(selectedItem, "Expected the selected item to be undefined");
+
+  await createNewItem();
+  expectItemIsSelected("");
+
+  await inputValue("One");
+  await finishEdit();
+  expectItemIsSelected("One");
+  expectItems(["One"]);
+
+  await createNewItem();
+  expectItemIsSelected("");
+
+  await inputValue("Two");
+  await finishEdit();
+  expectItemIsSelected("Two");
+  expectItems(["One", "Two"]);
+}
+
+////////////////////////////////////
+/////////// Test utils /////////////
+////////////////////////////////////
+
+// assertions
+function expectItemIsSelected(itemName: string) {
+  const item = window.root.children.find((i) => i.text === itemName);
+  if (!item) error(`Can't find item with the name '${itemName}'`);
+  else {
+    const row = getRowForItem(item);
+    if (!row) {
+      error(`Can't find element for the item '${itemName}'`);
+    } else {
+      hasClass(
+        row,
+        "selected",
+        `Expected ${itemName} to be selected, but it wasn't`
+      );
+    }
+  }
+}
 
 function expectItems(names: string[]) {
   const model = window.root.children.map((c) => c.text);
@@ -83,28 +157,6 @@ function expectItems(names: string[]) {
   expectElementsHaveContent(texts, names, "Failed to verify UI elements");
 }
 
-////////////////////////////////////
-/////////// Test utils /////////////
-////////////////////////////////////
-
-// assertions
-function expectItemIsSelected(itemName: string) {
-  const item = window.root.children.find((i) => i.text === itemName);
-  if (!item) console.error(`Can't find item with the name '${itemName}'`);
-  else {
-    const row = getRowForItem(item);
-    if (!row) {
-      console.error(`Can't find element for the item '${itemName}'`);
-    } else {
-      hasClass(
-        row,
-        "selected",
-        `Expected ${itemName} to be selected, but it wasn't`
-      );
-    }
-  }
-}
-
 // actions
 async function arrowDown() {
   return dispatchKeyDown("ArrowDown");
@@ -114,16 +166,47 @@ function arrowUp() {
   return dispatchKeyDown("ArrowUp");
 }
 
+function startEdit() {
+  return dispatchKeyDown("KeyE");
+}
+
+function finishEdit() {
+  return dispatchKeyDown("Enter");
+}
+
+function createNewItem() {
+  return dispatchKeyDown("Enter");
+}
+
+function deleteItem() {
+  return dispatchKeyDown("KeyX");
+}
+
 function moveItemDown() {
   return dispatchKeyDown("ArrowDown", { metaKey: true, shiftKey: true });
 }
+
 function moveItemUp() {
   return dispatchKeyDown("ArrowUp", { metaKey: true, shiftKey: true });
 }
 
-type KeyName = "ArrowDown" | "ArrowUp";
+const SLOW_DELAY_MS = 100;
+
+async function inputValue(val: string) {
+  if (isSlowTesting()) await sleep(SLOW_DELAY_MS);
+  if (document.activeElement) {
+    document.activeElement.innerHTML = val;
+    document.activeElement.dispatchEvent(
+      new Event("input", { bubbles: true, cancelable: true })
+    );
+  } else {
+    throw new Error("No element is active");
+  }
+}
+
+type KeyName = "ArrowDown" | "ArrowUp" | "KeyE" | "KeyX" | "Enter";
 async function dispatchKeyDown(code: KeyName, props?: KeyboardEventInit) {
-  if (isSlowTesting()) await sleep(100);
+  if (isSlowTesting()) await sleep(SLOW_DELAY_MS);
   document.dispatchEvent(
     new KeyboardEvent("keydown", {
       key: code,
@@ -158,19 +241,18 @@ function isSlowTesting() {
 
 function hasClass(elem: HTMLElement, className: string, message: string) {
   if (!elem.classList.contains(className)) {
-    console.error(
-      message,
-      "Element",
-      elem,
-      ` doesn't contain class '${className}'`
-    );
+    error(message, "Element", elem, ` doesn't contain class '${className}'`);
   }
+}
+
+function isUndefined(val: any, message: string) {
+  if (val !== undefined) error(message);
 }
 
 function arrayEqual<T>(given: T[], expected: T[], message: string) {
   for (let i = 0; i < given.length; i++) {
     if (given[i] !== expected[i]) {
-      console.error(
+      error(
         message + ".",
         `Mismatch at index ${i}: given "${given[i]}", expected "${expected[i]}".`
       );
@@ -185,7 +267,7 @@ function expectElementsHaveContent<T>(
 ) {
   for (let i = 0; i < given.length; i++) {
     if (given[i].textContent !== expected[i]) {
-      console.error(
+      error(
         message + ".",
         "Expected",
         given[i],
@@ -199,4 +281,9 @@ function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+function error(...params: any[]) {
+  console.error(...params);
+  throw new Error("^^^^^^^^^");
 }
