@@ -5,7 +5,7 @@ import "./view.scss";
 export function viewItem(item: Item) {
   return div({
     id: item.id,
-    className: `row`,
+    className: `row row-0`,
     children: [
       div({ className: "icon" }),
       span({ className: "row-text", children: item.text }),

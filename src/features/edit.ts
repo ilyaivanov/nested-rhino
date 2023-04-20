@@ -1,9 +1,10 @@
 import { Item } from "../tree";
+import { getRowForItem } from "./item";
 import { selectedItem } from "./selection";
 
 export let elementEdited: HTMLElement | undefined;
 export function startEdit(item: Item) {
-  const row = document.getElementById(item.id);
+  const row = getRowForItem(item);
   if (row) {
     const textElem = row.getElementsByClassName("row-text");
     elementEdited = textElem[0] as HTMLElement;
