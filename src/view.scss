@@ -7,6 +7,8 @@ $selection-color: white;
 $secondary-color: rgb(125, 125, 125);
 $faded-color: rgb(58, 58, 58);
 $main-content-width: 750px;
+$font-size: 14px;
+$item-padding: 6px;
 
 body {
   margin: 0;
@@ -22,14 +24,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
-  font-size: 15px;
+  font-size: $font-size;
 
   font-weight: 500;
 }
 
 .row {
-  padding-top: 7px;
-  padding-bottom: 9px;
+  padding-top: $item-padding - 1;
+  padding-bottom: $item-padding + 1;
   display: flex;
   padding-right: max((100% - $main-content-width) / 2, 20px);
 }
@@ -44,11 +46,17 @@ $half-icon-size: 4px;
 .icon {
   min-width: $icon-size;
   height: $icon-size;
+  box-sizing: border-box;
   background-color: $secondary-color;
   margin-right: 8px;
 
   // this depends on text font-size (centering now by eye)
   margin-top: 6px;
+}
+
+.icon.empty {
+  border: 1px solid $secondary-color;
+  background-color: initial;
 }
 
 .row-text {

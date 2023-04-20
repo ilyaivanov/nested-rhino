@@ -9,7 +9,9 @@ export function viewItem(item: Item, level: number): Element {
       div({
         className: `row row-${level}`,
         children: [
-          div({ className: "icon" }),
+          div({
+            className: `icon ${item.children.length == 0 ? "empty" : ""}`,
+          }),
           span({ className: "row-text", children: item.text }),
         ],
       }),
