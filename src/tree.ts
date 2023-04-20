@@ -18,6 +18,15 @@ export function item(text: string, children?: Item[]): Item {
   return res;
 }
 
+export function createItemAfter(itemAfterToInsert: Item): Item {
+  const newItem = item("");
+
+  const context = getContext(itemAfterToInsert);
+  context.splice(context.indexOf(itemAfterToInsert) + 1, 0, newItem);
+  newItem.parent = itemAfterToInsert.parent;
+  return newItem;
+}
+
 export function getItemAbove(item: Item) {
   const context = getContext(item);
   return context[context.indexOf(item) - 1];
