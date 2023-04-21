@@ -23,6 +23,7 @@ export function getItemLevel(item: Item) {
   let level = 0;
   let i: Item | undefined = item;
   while (i && i.parent && !isRoot(i.parent)) {
+    level += 1;
     i = i.parent;
   }
   return level;

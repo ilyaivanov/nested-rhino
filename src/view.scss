@@ -10,6 +10,13 @@ $main-content-width: 750px;
 $font-size: 14px;
 $item-padding: 6px;
 
+$icon-size: 8px;
+$half-icon-size: 4px;
+
+$line-width: 2px;
+$half-line-width: 1px;
+$step: 30px;
+
 body {
   margin: 0;
   padding-top: 40px;
@@ -30,8 +37,8 @@ body {
 }
 
 .row {
-  padding-top: $item-padding - 1;
-  padding-bottom: $item-padding + 1;
+  padding-top: $item-padding;
+  padding-bottom: $item-padding;
   display: flex;
   padding-right: max((100% - $main-content-width) / 2, 20px);
 }
@@ -41,8 +48,6 @@ body {
   color: $selection-color;
 }
 
-$icon-size: 8px;
-$half-icon-size: 4px;
 .icon {
   min-width: $icon-size;
   height: $icon-size;
@@ -51,7 +56,7 @@ $half-icon-size: 4px;
   margin-right: 8px;
 
   // this depends on text font-size (centering now by eye)
-  margin-top: 6px;
+  margin-top: 5px;
 }
 
 .icon.empty {
@@ -65,10 +70,13 @@ $half-icon-size: 4px;
 
 .children-container {
   position: relative;
-}
 
-$line-width: 2px;
-$half-line-width: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  overflow: hidden;
+}
 
 .children-line {
   width: 2px;
@@ -78,8 +86,6 @@ $half-line-width: 1px;
   top: 0px;
   bottom: 0px;
 }
-
-$step: 30px;
 
 @for $i from 0 through 5 {
   .row-#{$i} {

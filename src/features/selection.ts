@@ -28,7 +28,7 @@ export function goUp() {
 
 export function getItemToSelectAfterRemovingSelected() {
   if (selectedItem)
-    return getItemAbove(selectedItem) || getItemBelow(selectedItem);
+    return getItemAbove(selectedItem) || getFollowingSibling(selectedItem);
 }
 
 export const getItemAbove = (item: Item): Item | undefined => {

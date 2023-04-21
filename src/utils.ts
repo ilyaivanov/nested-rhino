@@ -20,3 +20,8 @@ export function generateRandomId() {
 
   return results;
 }
+
+export function appendOneItem<T>(array: T[], item: T): T[] {
+  array.push(item);
+  return array;
+}

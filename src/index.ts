@@ -1,5 +1,5 @@
 import { lorem } from "./utils";
-import { Item, item } from "./tree";
+import { Item, isRoot, item } from "./tree";
 import { moveItemDown, moveItemUp } from "./features/movement";
 import { goDown, goUp, selectItem, selectedItem } from "./features/selection";
 import { addNewItemAfter, createItemAndAddAsFirstChild } from "./features/add";
@@ -7,6 +7,7 @@ import { removeItem } from "./features/remove";
 import { elementEdited, startEdit, stopEdit } from "./features/edit";
 import { renderApp } from "./view";
 import { getSampleData, truRunTests as tryRunTests } from "./test/index";
+import { closeItem, openItem } from "./features/openClose";
 
 const initialState = item("Root", [
   item("Carbon Based Lifeforms", [
@@ -67,6 +68,18 @@ window.addEventListener("keydown", (e) => {
     e.preventDefault();
     if (e.metaKey && e.shiftKey) moveItemDown(selectedItem);
     else goDown();
+  }
+  if (e.code === "ArrowLeft") {
+    e.preventDefault();
+    if (selectedItem.isOpen) closeItem(selectedItem);
+    else if (selectedItem.parent && !isRoot(selectedItem.parent))
+      selectItem(selectedItem.parent);
+  }
+  if (e.code === "ArrowRight") {
+    e.preventDefault();
+    if (!selectedItem.isOpen) openItem(selectedItem);
+    else if (selectedItem.children.length > 0)
+      selectItem(selectedItem.children[0]);
   }
   if (e.code === "ArrowUp") {
     e.preventDefault();
