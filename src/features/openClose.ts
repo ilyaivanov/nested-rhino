@@ -6,7 +6,7 @@ import {
   getRowForItem,
 } from "./item";
 
-const COLLAPSE_DURATION = 300;
+export const COLLAPSE_DURATION = 300;
 
 export function closeItem(item: Item) {
   item.isOpen = false;
