@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = (env, argv) => ({
+  // entry: "./playground/index.ts",
   entry: "./src/index.ts",
   output: {
     filename: `app.js`,

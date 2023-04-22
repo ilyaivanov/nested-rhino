@@ -41,6 +41,8 @@ body {
   padding-bottom: $item-padding;
   display: flex;
   padding-right: max((100% - $main-content-width) / 2, 20px);
+
+  transition: padding-left 300ms ease-in-out;
 }
 
 .selected > .row {

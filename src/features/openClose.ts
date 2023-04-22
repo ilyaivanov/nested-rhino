@@ -6,7 +6,7 @@ import {
   getRowForItem,
 } from "./item";
 
-export const COLLAPSE_DURATION = 300;
+window.collapseSpeed = 300;
 
 export function closeItem(item: Item) {
   item.isOpen = false;
@@ -24,7 +24,7 @@ export function closeItem(item: Item) {
         { height: childrenView.clientHeight + "px", opacity: "1" },
         { height: "0px",                            opacity: "0" },
       ],
-      { duration: COLLAPSE_DURATION, easing: "ease-in-out" }
+      { duration: window.collapseSpeed, easing: "ease-in-out" }
     )
     .addEventListener("finish", () => onFinish(childrenView, item));
 }
@@ -50,7 +50,7 @@ export function openItem(item: Item) {
       { height: "0px",                            opacity: "0" },
       { height: childrenView.clientHeight + "px", opacity: "1" },
     ],
-      { duration: COLLAPSE_DURATION, easing: "ease-in-out" }
+      { duration: window.collapseSpeed, easing: "ease-in-out" }
     )
     .addEventListener("finish", () => onFinish(childrenView, item));
 }

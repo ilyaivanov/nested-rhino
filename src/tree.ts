@@ -29,12 +29,9 @@ export function getItemLevel(item: Item) {
   return level;
 }
 
-export function createItemAfter(itemAfterToInsert: Item): Item {
+export function createItemAfter(afterWhichToInsert: Item): Item {
   const newItem = item("");
-
-  const context = getContext(itemAfterToInsert);
-  context.splice(context.indexOf(itemAfterToInsert) + 1, 0, newItem);
-  newItem.parent = itemAfterToInsert.parent;
+  insertItemAfter(afterWhichToInsert, newItem);
   return newItem;
 }
 export function createItemAsFirstChild(parent: Item): Item {
@@ -43,6 +40,25 @@ export function createItemAsFirstChild(parent: Item): Item {
   parent.children.unshift(newItem);
   newItem.parent = parent;
   return newItem;
+}
+
+export function insertAsLastChild(parent: Item, item: Item) {
+  removeItemFromParent(item);
+  parent.children.push(item);
+  item.parent = parent;
+}
+
+export function insertItemAfter(afterWhichToInsert: Item, newItem: Item) {
+  if (newItem.parent) removeItemFromParent(newItem);
+
+  const context = getContext(afterWhichToInsert);
+  context.splice(context.indexOf(afterWhichToInsert) + 1, 0, newItem);
+  newItem.parent = afterWhichToInsert.parent;
+}
+
+export function removeItemFromParent(item: Item) {
+  const context = getContext(item);
+  context.splice(context.indexOf(item), 1);
 }
 
 export function getContext(item: Item) {

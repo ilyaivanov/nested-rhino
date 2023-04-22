@@ -67,6 +67,9 @@ const getFollowingItem = (item: Item): Item | undefined => {
 const getFollowingSibling = (item: Item): Item | undefined =>
   getRelativeSibling(item, (currentIndex) => currentIndex + 1);
 
+export const getPreviousSibling = (item: Item): Item | undefined =>
+  getRelativeSibling(item, (currentIndex) => currentIndex - 1);
+
 const getRelativeSibling = (
   item: Item,
   getNextItemIndex: (itemIndex: number) => number

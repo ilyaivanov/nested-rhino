@@ -1,6 +1,11 @@
 import { lorem } from "./utils";
 import { Item, isRoot, item } from "./tree";
-import { moveItemDown, moveItemUp } from "./features/movement";
+import {
+  moveItemDown,
+  moveItemLeft,
+  moveItemRight,
+  moveItemUp,
+} from "./features/movement";
 import { goDown, goUp, selectItem, selectedItem } from "./features/selection";
 import { addNewItemAfter, createItemAndAddAsFirstChild } from "./features/add";
 import { removeItem } from "./features/remove";
@@ -44,6 +49,7 @@ const initialState = item("Root", [
 declare global {
   interface Window {
     root: Item;
+    collapseSpeed: number;
   }
 }
 
@@ -71,13 +77,15 @@ window.addEventListener("keydown", (e) => {
   }
   if (e.code === "ArrowLeft") {
     e.preventDefault();
-    if (selectedItem.isOpen) closeItem(selectedItem);
+    if (e.metaKey && e.shiftKey) moveItemLeft(selectedItem);
+    else if (selectedItem.isOpen) closeItem(selectedItem);
     else if (selectedItem.parent && !isRoot(selectedItem.parent))
       selectItem(selectedItem.parent);
   }
   if (e.code === "ArrowRight") {
     e.preventDefault();
-    if (!selectedItem.isOpen) openItem(selectedItem);
+    if (e.metaKey && e.shiftKey) moveItemRight(selectedItem);
+    else if (!selectedItem.isOpen) openItem(selectedItem);
     else if (selectedItem.children.length > 0)
       selectItem(selectedItem.children[0]);
   }
