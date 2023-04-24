@@ -38,7 +38,7 @@ export function openItem(item: Item) {
     return;
   }
 
-  const childrenView = viewChildren(item, getItemLevel(item));
+  const childrenView = viewChildren(item, getItemLevel(item) + 1);
 
   const itemElem = getRowForItem(item);
   itemElem.insertAdjacentElement("beforeend", childrenView);
@@ -55,7 +55,7 @@ export function openItem(item: Item) {
     .addEventListener("finish", () => onFinish(childrenView, item));
 }
 
-function onFinish(childrenContainer: HTMLElement, item: Item) {
+function onFinish(childrenContainer: Element, item: Item) {
   if (!item.isOpen) childrenContainer.remove();
 }
 

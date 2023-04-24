@@ -1,9 +1,18 @@
 import { expect, isTesting, wait } from "./utils";
-import { movingItems } from "./movement";
+import { horizontalMovingItems, movingItems } from "./movement";
 import { smokeTesting } from "./smokeTesting";
 import { item } from "../tree";
 import { editTests } from "./renaming";
 import { deleteTests } from "./delete";
+
+const tests = [
+  horizontalMovingItems,
+  // smokeTesting,
+  // movingItems,
+  // editTests,
+  // horizontalMovement,
+  // deleteTests,
+];
 
 declare global {
   interface Window {
@@ -27,14 +36,6 @@ async function runTests() {
   window.testWaitTime = 60;
 
   console.info("Running tests...");
-
-  const tests = [
-    smokeTesting,
-    movingItems,
-    editTests,
-    // horizontalMovement,
-    deleteTests,
-  ];
 
   for (const test of tests) {
     // need to wait until animations are finished

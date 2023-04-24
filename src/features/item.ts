@@ -1,5 +1,6 @@
 import { Item } from "../tree";
 
+// Move this to view
 export function getRowForItem(item: Item): HTMLElement {
   const res = document.getElementById(item.id);
   if (!res) throw new Error(`Can't find Item ${item.text} in the DOM`);

@@ -1,3 +1,9 @@
+export function appendAll(container: Element, elems: Element[]) {
+  for (const elem of elems) container.appendChild(elem);
+
+  return container;
+}
+
 export function div(props: Props) {
   return assignCommonProperties(document.createElement("div"), props);
 }

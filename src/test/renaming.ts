@@ -20,7 +20,7 @@ export async function editTests() {
   await act.finishEdit();
   expect.selectedItem("Three");
 
-  expect.children(["Two", "Three"]);
+  expect.rootChildren(["Two", "Three"]);
 
   await act.deleteItem();
   await act.deleteItem();

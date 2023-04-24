@@ -1,8 +1,16 @@
-import { Item, getContext, insertAsLastChild, insertItemAfter } from "../tree";
+import {
+  Item,
+  getContext,
+  getItemLevel,
+  insertAsLastChild,
+  insertItemAfter,
+} from "../tree";
 import {
   appendChildElement,
   createChildren,
+  getIcon,
   insertViewAfterItem,
+  viewChildren,
 } from "../view";
 import { getRowForItem } from "./item";
 import { getPreviousSibling } from "./selection";
@@ -33,12 +41,22 @@ export function moveItemRight(item: Item) {
     // Tree
     insertAsLastChild(previousSibling, item);
 
+    const row = getRowForItem(item);
     // UI
     if (previousSibling.isOpen) {
-      appendChildElement(previousSibling, getRowForItem(item));
+      appendChildElement(previousSibling, row);
     } else {
       previousSibling.isOpen = true;
-      createChildren(previousSibling, getRowForItem(item));
+      // we already added the item
+      if (previousSibling.children.length == 1) {
+        createChildren(previousSibling, row);
+      } else {
+        createChildren(
+          previousSibling,
+          viewChildren(previousSibling, getItemLevel(previousSibling))
+        );
+      }
+      getIcon(previousSibling).classList.remove("empty");
     }
   }
 }
@@ -51,6 +69,8 @@ export function moveItemLeft(item: Item) {
 
     // UI
     insertViewAfterItem(parent, getRowForItem(item));
+
+    if (parent.children.length == 0) getIcon(parent).classList.add("empty");
   }
 }
 

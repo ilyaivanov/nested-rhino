@@ -25,7 +25,7 @@ export async function deleteTests() {
   await act.inputValue("One");
   await act.finishEdit();
   expect.selectedItem("One");
-  expect.children(["One"]);
+  expect.rootChildren(["One"]);
 
   await act.createNewItem();
   expect.selectedItem("");
@@ -33,7 +33,7 @@ export async function deleteTests() {
   await act.inputValue("Two");
   await act.finishEdit();
   expect.selectedItem("Two");
-  expect.children(["One", "Two"]);
+  expect.rootChildren(["One", "Two"]);
 
   await act.deleteItem();
   await act.deleteItem();

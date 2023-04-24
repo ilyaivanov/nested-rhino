@@ -1,14 +1,11 @@
 import { getItemChildrenContainer, getRowForItem } from "./features/item";
-import { div, span } from "./html";
+import { appendAll, div, span } from "./html";
 import { Item, getItemLevel } from "./tree";
 import { appendOneItem } from "./utils";
 import "./view.scss";
 
 export function renderApp(root: Item) {
-  return div({
-    id: root.id,
-    children: root.children.map((item) => viewItem(item, 0)),
-  });
+  return viewChildren(root, 0);
 }
 
 export function viewItem(item: Item, level: number): HTMLElement {
@@ -21,20 +18,29 @@ export function viewItem(item: Item, level: number): HTMLElement {
           div({
             className: `icon ${item.children.length == 0 ? "empty" : ""}`,
           }),
-          span({ className: "row-text", children: item.text }),
+          span({
+            id: item.id + "-text",
+            className: "row-text",
+            children: item.text,
+          }),
         ],
       }),
-      item.isOpen ? viewChildren(item, level) : undefined,
+      item.isOpen ? viewChildren(item, level + 1) : undefined,
     ],
   });
 }
 
+export function getChildrenElem(item: Item) {
+  const res = document.getElementById(item.id + "-children");
+  return assertNotUndefined(res, `${item.text} children container`);
+}
+
 export function viewChildren(item: Item, level: number) {
-  return createChildrenContainer(
-    appendOneItem(
-      item.children.map((item) => viewItem(item, level + 1)),
-      childrenLine(level)
-    )
+  const children = item.children.map((item) => viewItem(item, level));
+  const container = createChildrenContainer(item);
+  return appendAll(
+    container,
+    level > 0 ? appendOneItem(children, childrenLine(level - 1)) : children
   );
 }
 
@@ -46,8 +52,21 @@ function childrenLine(level: number) {
   return div({ className: `children-line children-line-${level}` });
 }
 
-function createChildrenContainer(children?: HTMLElement[]) {
-  return div({ children, className: "children-container" });
+function createChildrenContainer(item: Item) {
+  return div({ id: item.id + "-children", className: "children-container" });
+}
+
+export function getDirectChildrenTextsForItem(item: Item) {
+  return item.children.map((child) => {
+    const res = document.getElementById(child.id + "-text");
+    if (!res)
+      throw new Error(`Can't find ${item.id}-text element for ${item.text} `);
+    return res;
+  });
+}
+
+export function getIcon(item: Item) {
+  return getRowForItem(item).children[0].children[0];
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -62,11 +81,11 @@ export function appendChildElement(parent: Item, view: HTMLElement) {
   incrementPostfixes(view, "children-line", level + 1);
 }
 
-export function createChildren(parent: Item, view: HTMLElement) {
+export function createChildren(parent: Item, view: Element) {
   const previousItemRow = getRowForItem(parent);
   const level = getItemLevel(parent);
 
-  const childrenContainer = createChildrenContainer();
+  const childrenContainer = createChildrenContainer(parent);
   childrenContainer.appendChild(view);
   previousItemRow.appendChild(childrenContainer);
   childrenContainer.appendChild(childrenLine(level));
@@ -89,11 +108,7 @@ export function insertViewAfterItem(item: Item, view: HTMLElement) {
 
 // traverse and increment all row-1 to row-2, row-2 to row-3, etc
 // assumes .row and .row-1 are present on an element
-function incrementPostfixes(
-  elem: HTMLElement,
-  prefix: string,
-  baseLevel: number
-) {
+function incrementPostfixes(elem: Element, prefix: string, baseLevel: number) {
   elem.querySelectorAll("." + prefix).forEach((el) => {
     el.classList.forEach((c) => {
       if (c.startsWith(prefix + "-")) {
@@ -102,4 +117,18 @@ function incrementPostfixes(
       }
     });
   });
+}
+
+function assertNotUndefined<T>(
+  value: T | undefined | null,
+  def: string = ""
+): T {
+  if (value === undefined || value === null)
+    throw new Error(
+      `Expected to ${
+        def || "value"
+      } not to be undefined or undefined, got ${value}.`
+    );
+
+  return value;
 }
